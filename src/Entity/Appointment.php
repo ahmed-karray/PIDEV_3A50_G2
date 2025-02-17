@@ -22,8 +22,10 @@ class Appointment
     private ?string $nomPatient = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "L'email est obligatoire.")]
-    #[Assert\Email(message: "L'email fourni n'est pas valide.")]       
+    #[Assert\Email(
+        message: "L'email fourni n'est pas valide.",
+        mode: "strict"
+    )]       
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -31,10 +33,10 @@ class Appointment
     #[Assert\Type(type: \DateTimeInterface::class, message: "Format de date invalide.")]        
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]  // Permet à la colonne d'accepter null
-    #[Assert\Type(type: \DateTime::class, message: "Format d'heure invalide.")]
-    private ?\DateTime $heure = null;
-
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[Assert\NotNull(message: "L'heure est obligatoire.")]
+    private ?\DateTimeInterface $heure = null;
+    
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le type de consultation est obligatoire.")]
     private ?string $typeConsultation = null;
@@ -91,13 +93,16 @@ class Appointment
 
     public function setHeure(?\DateTimeInterface $heure): static
     {
-    if ($heure !== null && !($heure instanceof \DateTime)) {
-        throw new \InvalidArgumentException('Expected an instance of DateTime.');
-    }
-
-    $this->heure = $heure;
-
-    return $this;
+        if ($heure !== null) {
+            $heureFormat = $heure->format('H:i'); 
+    
+            if ($heureFormat < "08:00" || $heureFormat > "17:00") {
+                throw new \InvalidArgumentException("L'heure du rendez-vous doit être comprise entre 08:00 et 17:00.");
+            }
+        }
+    
+        $this->heure = $heure;
+        return $this;
     }
 
     public function getTypeConsultation(): ?string

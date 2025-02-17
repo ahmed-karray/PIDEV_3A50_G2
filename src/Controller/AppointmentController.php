@@ -52,7 +52,7 @@ class AppointmentController extends AbstractController
         $form = $this->createForm(AppointmentType::class, $appointment);
         $form->handleRequest($request);
     
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) { 
             $em->persist($appointment);
             $em->flush();
             $this->addFlash('success', 'Rendez-vous ajouté avec succès.');
@@ -65,12 +65,15 @@ class AppointmentController extends AbstractController
     }
 
     #[Route('/appointment/edit/{id}', name: 'appointment_edit')]
-    public function edit(Request $request, Appointment $appointment, EntityManagerInterface $em): Response
+    public function edit(ManagerRegistry $manager, Request $req, $id, AppointmentRepository $repo): Response
     {
+        $em = $manager->getManager();
+        $appointment = $repo->find($id);
         $form = $this->createForm(AppointmentType::class, $appointment);
-        $form->handleRequest($request);
+        $form->handleRequest($req);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($appointment);
             $em->flush();
             $this->addFlash('success', 'Rendez-vous modifié avec succès.');
 

@@ -31,53 +31,65 @@
     {% endblock %}
 </head>
 <body>
-{% block body %}
-<div class="container">
-    <h1 class="my-4">
-        <a href="{{ path('add_appointment') }}" class="btn btn-primary">Add Appointment</a>
-    </h1>
+    {% block body %}
 
-    <table class="table table-bordered table-striped">
-        <caption>List of Appointments</caption>
-        <thead class="table-dark">
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Date</th>
-                <th>Heure</th>
-                <th>Consultation Type</th>
-                <th>Consultation Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for a in list %}
-                <tr>
-                    <td>{{ a.nomPatient }}</td> 
-                    <td>{{ a.email }}</td>
-                    <td>{{ a.date|date('Y-m-d') }}</td>
-                    <td>{{ a.heure|date('H:i') }}</td>
-                    <td>{{ a.typeConsultation }}</td>
-                    <td>{{ a.statut }}</td>
-                    <td>
-                        <a href="{{ path('appointment_edit', {'id': a.id}) }}" class="btn btn-warning btn-sm">Update</a>
-                        <form action="{{ path('appointment_delete', {'id': a.id}) }}" method="post" class="d-inline">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ a.id) }}">
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this appointment?');">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="5" class="text-center">No appointments found.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+{{form_start(form, {'attr': {'novalidate': 'novalidate'}})}}
+<div class="container-fluid bg-primary my-5 py-5">
+        <div class="container py-5">
+            <div class="row gx-5">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="mb-4">
+                        <h5 class="d-inline-block text-white text-uppercase border-bottom border-5">Appointment</h5>
+                        <h1 class="display-4">Edit An Appointment</h1>
+                    </div>
+                    <a class="btn btn-dark rounded-pill py-3 px-5 me-3" href="">Find Doctor</a>
+                    <a class="btn btn-outline-dark rounded-pill py-3 px-5" href="">Read More</a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="bg-white text-center rounded p-5">
+    <h1 class="mb-4">Book An Appointment</h1>
+
+    <div class="row g-3">
+        <!-- Nom du patient -->
+        <div class="col-12 col-sm-6">
+            {{ form_row(form.nomPatient, {'attr': {'class': 'form-control bg-light border-0', 'style': 'height: 55px;'}}) }}
+        </div>
+
+        <!-- Email du patient -->
+        <div class="col-12 col-sm-6">
+            {{ form_row(form.email, {'attr': {'class': 'form-control bg-light border-0', 'style': 'height: 55px;'}}) }}
+        </div>
+
+        <!-- Date -->
+        <div class="col-12 col-sm-6">
+            {{ form_row(form.date, {'attr': {'class': 'form-control bg-light border-0 datetimepicker-input', 'style': 'height: 55px;'}}) }}
+        </div>
+
+        <!-- Heure -->
+        <div class="col-12 col-sm-6">
+            {{ form_row(form.heure, {'attr': {'class': 'form-control bg-light border-0 datetimepicker-input', 'style': 'height: 55px;'}}) }}
+        </div>                               
+
+        <!-- Type -->
+        <div class="col-12 col-sm-6">
+            {{ form_row(form.typeConsultation, {'attr': {'class': 'form-select bg-light border-0', 'style': 'height: 55px;'}}) }}
+        </div>
+
+        <!-- Statut -->
+        <div class="col-12 col-sm-6">
+            {{ form_row(form.statut, {'attr': {'class': 'form-select bg-light border-0', 'style': 'height: 55px;'}}) }}
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Edit An Appointment</button>
+        </div>
+    </div>
+
+
+{{form_end(form)}}
 {% endblock %}
 </body>
- <!-- Footer Start -->
+    <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light mt-5 py-5">
         <div class="container py-5">
             <div class="row g-5">
@@ -160,4 +172,3 @@
 
 
 </html>
-

@@ -3,14 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Appointment;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -21,9 +20,13 @@ class AppointmentType extends AbstractType
     {
         $builder
             
-            ->add('nomPatient', TextType::class, [
-                'label' => 'Nom du patient'
-            ])
+        ->add('nomPatient', TextType::class, [
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Le nom ne doit pas être vide.',
+                ]),
+            ],
+        ])
             ->add('email', EmailType::class, [
                 'label' => 'Email du patient'
             ])
@@ -53,7 +56,6 @@ class AppointmentType extends AbstractType
                     'Annulé' => 'canceled',
                 ]
             ])
-            ->add("save", SubmitType::class)
             ;
 
     }
