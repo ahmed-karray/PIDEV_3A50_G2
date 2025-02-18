@@ -7,8 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType; // For email validation
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Add this
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -20,7 +21,9 @@ class PharmacieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom', null, [
+            ->add('nom', TextType::class, [
+                'required' => true,
+                'empty_data' => '', // Empêche la valeur null
                 'constraints' => [
                     new NotBlank(['message' => 'Le nom de la pharmacie est obligatoire.']),
                     new Length([
@@ -31,7 +34,9 @@ class PharmacieType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('adresse', null, [
+            ->add('adresse', TextType::class, [
+                'required' => true,
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(['message' => 'L\'adresse est obligatoire.']),
                     new Length([
@@ -42,44 +47,52 @@ class PharmacieType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('email', EmailType::class, [ // Use EmailType for email validation
+            ->add('email', EmailType::class, [
+                'required' => true,
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(['message' => 'L\'email est obligatoire.']),
                 ],
             ])
-            ->add('tel', null, [
+            ->add('tel', TextType::class, [
+                'required' => true,
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(['message' => 'Le numéro de téléphone est obligatoire.']),
                     new Regex([
-                        'pattern' => '/^[0-9]{8}$/', // Example: 8-digit phone number
+                        'pattern' => '/^[0-9]{8}$/',
                         'message' => 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
                     ]),
                 ],
             ])
-            ->add('categorie', null, [
+            ->add('type', ChoiceType::class, [
+                'choices' => [
+                    'Pharmacie de ville' => 'ville',
+                    'Pharmacie hospitalière' => 'hopital',
+                ],
+                'placeholder' => 'Sélectionnez un type',
+                'required' => true,
+                'empty_data' => 'ville', // ⚡ Définit une valeur par défaut
                 'constraints' => [
-                    new NotBlank(['message' => 'La catégorie est obligatoire.']),
-                    new Length([
-                        'min' => 2,
-                        'max' => 100,
-                        'minMessage' => 'La catégorie doit contenir au moins {{ limit }} caractères.',
-                        'maxMessage' => 'La catégorie ne peut pas dépasser {{ limit }} caractères.',
-                    ]),
+                    new NotBlank(['message' => 'Le type de pharmacie est obligatoire.']),
                 ],
             ])
+            
             ->add('logo', FileType::class, [
                 'label' => 'Logo (Image File)',
-                'mapped' => false, // Important! Not mapped directly to the entity
+                'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
-                        'mimeTypesMessage' => 'Veuillez télécharger un fichier image valide (JPEG, PNG, WEBP).',
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, WEBP).',
                     ]),
                 ],
             ])
-            ->add('ville', null, [
+            ->add('ville', TextType::class, [
+                'required' => true,
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(['message' => 'La ville est obligatoire.']),
                     new Length([
@@ -91,7 +104,7 @@ class PharmacieType extends AbstractType
                 ],
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer', // Customize the submit button label
+                'label' => 'Enregistrer',
             ]);
     }
 

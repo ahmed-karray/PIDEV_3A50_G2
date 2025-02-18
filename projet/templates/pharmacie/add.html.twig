@@ -6,6 +6,6 @@
 {% block body %}
     <h1>Ajouter une Pharmacie</h1>
 
-    {{ form(form) }}
-        
+    {{ form(form, { 'attr': {'novalidate': 'novalidate'} })) }}
+
 {% endblock %}

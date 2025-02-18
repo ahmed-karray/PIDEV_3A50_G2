@@ -6,7 +6,7 @@
 {% block body %}
     <h1>Modifier la Pharmacie : {{ pharmacie.nom }}</h1>
 
-    {{ form_start(form) }}
+    {{ form_start(form, { 'attr': {'novalidate': 'novalidate'} }) }}
         {{ form_row(form.nom) }}
         {{ form_row(form.adresse) }}
         {{ form_row(form.email) }}
@@ -15,7 +15,7 @@
         {{ form_row(form.ville) }}
         {{ form_row(form.logo) }}
 
-        {# Display the current logo if it exists #}
+        {# Affichage du logo actuel si disponible #}
         {% if logoBase64 %}
             <div class="current-logo">
                 <p><strong>Logo actuel :</strong></p>
