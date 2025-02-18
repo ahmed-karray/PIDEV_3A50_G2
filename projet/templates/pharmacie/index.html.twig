@@ -9,7 +9,8 @@
     <div class="pharmacy-container">
         <div class="pharmacy-wrapper">
             {% for pharmacie in pharmacies %}
-                <div class="pharmacy-card" data-pharmacy-id="{{ pharmacie.id }}" data-url="{{ path('listmed', { id: pharmacie.id }) }}">
+            <div class="pharmacy-card" data-pharmacy-id="{{ pharmacie.id }}" data-url="{{ path('listmed', { pharmacieId: pharmacie.id }) }}">
+                <!-- Contenu de la carte -->
                     {% if pharmacie.logoBase64 %}
                         <img src="data:image/png;base64,{{ pharmacie.logoBase64 }}" alt="{{ pharmacie.nom }} Logo" class="pharmacy-logo">
                     {% else %}

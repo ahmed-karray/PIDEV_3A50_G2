@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MedicamentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,17 @@ class Medicament
 
     #[ORM\Column(type: Types::BLOB)]
     private $imageurl = null;
+
+    /**
+     * @var Collection<int, Pharmacie>
+     */
+    #[ORM\ManyToMany(targetEntity: Pharmacie::class, inversedBy: 'medicaments')]
+    private Collection $id_pharmacie;
+
+    public function __construct()
+    {
+        $this->id_pharmacie = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +133,30 @@ class Medicament
     public function setImageurl($imageurl): static
     {
         $this->imageurl = $imageurl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pharmacie>
+     */
+    public function getIdPharmacie(): Collection
+    {
+        return $this->id_pharmacie;
+    }
+
+    public function addIdPharmacie(pharmacie $idPharmacie): static
+    {
+        if (!$this->id_pharmacie->contains($idPharmacie)) {
+            $this->id_pharmacie->add($idPharmacie);
+        }
+
+        return $this;
+    }
+
+    public function removeIdPharmacie(pharmacie $idPharmacie): static
+    {
+        $this->id_pharmacie->removeElement($idPharmacie);
 
         return $this;
     }

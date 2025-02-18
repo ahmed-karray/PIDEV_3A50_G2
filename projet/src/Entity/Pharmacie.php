@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PharmacieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,17 @@ class Pharmacie
 
     #[ORM\Column(length: 255)]
     private ?string $ville = null;
+
+    /**
+     * @var Collection<int, Medicament>
+     */
+    #[ORM\ManyToMany(targetEntity: Medicament::class, mappedBy: 'id_pharmacie')]
+    private Collection $medicaments;
+
+    public function __construct()
+    {
+        $this->medicaments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +133,33 @@ class Pharmacie
     public function setVille(string $ville): static
     {
         $this->ville = $ville;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Medicament>
+     */
+    public function getMedicaments(): Collection
+    {
+        return $this->medicaments;
+    }
+
+    public function addMedicament(Medicament $medicament): static
+    {
+        if (!$this->medicaments->contains($medicament)) {
+            $this->medicaments->add($medicament);
+            $medicament->addIdPharmacie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedicament(Medicament $medicament): static
+    {
+        if ($this->medicaments->removeElement($medicament)) {
+            $medicament->removeIdPharmacie($this);
+        }
 
         return $this;
     }
