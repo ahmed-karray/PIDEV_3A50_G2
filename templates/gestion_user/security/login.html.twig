@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Your App Name</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/registration.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        {# Display flash messages (error, success, etc.) #}
+        {% for label, messages in app.flashes %}
+            <div class="alert alert-{{ label }}">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <form method="post" class="glassmorphism-form">
+            <h2>Login</h2>
+
+            {# Display error message if authentication fails #}
+            {% if error %}
+                <div class="form-error">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            {# Display message if user is already logged in #}
+            {% if app.user %}
+                <div class="mb-3">
+                    You are logged in as {{ app.user.userIdentifier }}, <a href="">Logout</a>
+                </div>
+            {% endif %}
+
+            {# Email Field #}
+            <div class="input-field">
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                <label for="inputEmail">Enter your email</label>
+            </div>
+
+            {# Password Field #}
+            <div class="input-field">
+                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                <label for="inputPassword">Enter your password</label>
+            </div>
+
+            {# CSRF Token #}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            {# Remember Me Checkbox #}
+            <div class="forget">
+                <label>
+                    <input type="checkbox" name="_remember_me"> Remember me
+                </label>
+            </div>
+
+            {# Submit Button #}
+            <button type="submit" class="btn">Login</button>
+
+            {# Forgot Password Link #}
+            <div class="forgot-password">
+                <p><a href="{{ path('forgot_password') }}">Forgot your password?</a></p>
+            </div>
+
+            {# Register Link #}
+            <div class="register">
+                <p>Don't have an account? <a href="{{ path('registration_choice') }}">Register</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const inputs = document.querySelectorAll('.input-field input');
+
+        inputs.forEach(input => {
+          // Check if the input is already filled on page load
+          if (input.value.trim() !== '') {
+            input.classList.add('filled');
+          }
+
+          // Add the 'filled' class when the input is focused or filled
+          input.addEventListener('input', function () {
+            if (input.value.trim() !== '') {
+              input.classList.add('filled');
+            } else {
+              input.classList.remove('filled');
+            }
+          });
+
+          // Add the 'filled' class when the input is focused
+          input.addEventListener('focus', function () {
+            input.classList.add('filled');
+          });
+
+          // Remove the 'filled' class when the input is blurred and empty
+          input.addEventListener('blur', function () {
+            if (input.value.trim() === '') {
+              input.classList.remove('filled');
+            }
+          });
+        });
+      });
+    </script>
+</body>
+</html>

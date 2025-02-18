@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Your App Name</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/registration.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        {{ form_start(registrationForm, { 'attr': { 'class': 'glassmorphism-form', 'novalidate': 'novalidate' } }) }}
+        <h2>Register</h2>
+
+        {# Name Field #}
+        <div class="input-field {{ form_errors(registrationForm.name) ? 'has-error' }}">
+            {{ form_widget(registrationForm.name, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_label(registrationForm.name, 'Enter your name') }}
+        </div>
+        {% if form_errors(registrationForm.name) %}
+                <div class="form-error">
+                    {{ form_errors(registrationForm.name) }}
+                </div>
+        {% endif %}
+
+        {# Email Field #}
+        <div class="input-field {{ form_errors(registrationForm.email) ? 'has-error' }}">
+            {{ form_widget(registrationForm.email, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_label(registrationForm.email, 'Enter your email') }}
+        </div>
+        {% if form_errors(registrationForm.email) %}
+                <div class="form-error">
+                    {{ form_errors(registrationForm.email) }}
+                </div>
+        {% endif %}
+
+        {# Password Field #}
+        <div class="input-field {{ form_errors(registrationForm.plainPassword) ? 'has-error' }}">
+            {{ form_widget(registrationForm.plainPassword, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_label(registrationForm.plainPassword, 'Enter your password') }}
+        </div>
+        {% if form_errors(registrationForm.plainPassword) %}
+                <div class="form-error">
+                    {{ form_errors(registrationForm.plainPassword) }}
+                </div>
+        {% endif %}
+
+        {# Age Field #}
+        <div class="input-field {{ form_errors(registrationForm.age) ? 'has-error' }}">
+            {{ form_widget(registrationForm.age, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_label(registrationForm.age, 'Enter your age') }}
+        </div>
+        {% if form_errors(registrationForm.age) %}
+                <div class="form-error">
+                    {{ form_errors(registrationForm.age) }}
+                </div>
+        {% endif %}
+
+        {# Phone Number Field #}
+        <div class="input-field {{ form_errors(registrationForm.phoneNumber) ? 'has-error' }}">
+            {{ form_widget(registrationForm.phoneNumber, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_label(registrationForm.phoneNumber, 'Enter your phone number') }}
+        </div>
+        {% if form_errors(registrationForm.phoneNumber) %}
+                <div class="form-error">
+                    {{ form_errors(registrationForm.phoneNumber) }}
+                </div>
+        {% endif %}
+
+        {# Country Field #}
+        <div class="input-field {{ form_errors(registrationForm.country) ? 'has-error' }}">
+            {{ form_widget(registrationForm.country, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_label(registrationForm.country, 'Enter your country') }}
+        </div>
+        {% if form_errors(registrationForm.country) %}
+                <div class="form-error">
+                    {{ form_errors(registrationForm.country) }}
+                </div>
+        {% endif %}
+
+        {# Therapy Type Field #}
+        <div class="input-field {{ form_errors(registrationForm.therapyType) ? 'has-error' }}">
+            {{ form_widget(registrationForm.therapyType, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_label(registrationForm.therapyType, 'Enter your therapy type') }}
+        </div>
+        {% if form_errors(registrationForm.therapyType) %}
+                <div class="form-error">
+                    {{ form_errors(registrationForm.therapyType) }}
+                </div>
+        {% endif %}
+
+        {# Agree Terms Field #}
+        <div class="forget {{ form_errors(registrationForm.agreeTerms) ? 'has-error' }}">
+            {{ form_widget(registrationForm.agreeTerms, { 'attr': { 'id': 'agreeTerms' } }) }}
+            {{ form_label(registrationForm.agreeTerms, 'I agree to the terms and conditions') }}
+        </div>
+        {% if form_errors(registrationForm.agreeTerms) %}
+                <div class="form-error">
+                    {{ form_errors(registrationForm.agreeTerms) }}
+                </div>
+        {% endif %}
+
+        {# Submit Button #}
+        <button type="submit" class="btn">Register</button>
+
+        {# Login Link #}
+        <div class="register">
+            <p>Already have an account? <a href="/login">Login</a></p>
+        </div>
+        {{ form_end(registrationForm) }}
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const inputs = document.querySelectorAll('.input-field input');
+
+        inputs.forEach(input => {
+          // Check if the input is already filled on page load
+          if (input.value.trim() !== '') {
+            input.classList.add('filled');
+          }
+
+          // Add the 'filled' class when the input is focused or filled
+          input.addEventListener('input', function () {
+            if (input.value.trim() !== '') {
+              input.classList.add('filled');
+            } else {
+              input.classList.remove('filled');
+            }
+          });
+
+          // Add the 'filled' class when the input is focused
+          input.addEventListener('focus', function () {
+            input.classList.add('filled');
+          });
+
+          // Remove the 'filled' class when the input is blurred and empty
+          input.addEventListener('blur', function () {
+            if (input.value.trim() === '') {
+              input.classList.remove('filled');
+            }
+          });
+        });
+      });
+    </script>
+</body>
+</html>
