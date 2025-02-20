@@ -1,0 +1,50 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h4>Modifier le Médecin</h4>
+    </div>
+    <div class="card-body">
+      {{ form_start(userForm, { 'attr': { 'class': 'form-horizontal', 'novalidate': 'novalidate' } }) }}
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.name, 'Nom', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.name, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.name) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.email, 'Email', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.email, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.email) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Laisser vide si inchangé'}}) }}
+        {{ form_errors(userForm.plainPassword) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.doctorType, 'Type de Médecin', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.doctorType, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.doctorType) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.diploma, 'Diplôme (optionnel)', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.diploma, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.diploma) }}
+      </div>
+      
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+      </div>
+      
+      {{ form_end(userForm) }}
+    </div>
+  </div>
+</div>
+{% endblock %}

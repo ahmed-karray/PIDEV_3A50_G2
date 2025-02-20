@@ -1,0 +1,55 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block content %}
+<div class="container">
+    <div class="page-inner">
+        <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+            <h4>Inscription Médecin</h4>
+            </div>
+            <div class="card-body">
+            {{ form_start(doctorRegistrationForm, { 'attr': { 'class': 'form-horizontal' } }) }}
+            
+            <div class="form-group mb-3">
+                {{ form_label(doctorRegistrationForm.name, 'Nom', {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(doctorRegistrationForm.name, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(doctorRegistrationForm.name) }}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form_label(doctorRegistrationForm.email, 'Email', {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(doctorRegistrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(doctorRegistrationForm.email) }}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form_label(doctorRegistrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(doctorRegistrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(doctorRegistrationForm.plainPassword) }}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form_label(doctorRegistrationForm.doctorType, 'Type de Médecin', {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(doctorRegistrationForm.doctorType, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(doctorRegistrationForm.doctorType) }}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form_label(doctorRegistrationForm.diploma, 'Diplôme (optionnel)', {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(doctorRegistrationForm.diploma, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(doctorRegistrationForm.diploma) }}
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">S'inscrire</button>
+            </div>
+            
+            {{ form_end(doctorRegistrationForm) }}
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

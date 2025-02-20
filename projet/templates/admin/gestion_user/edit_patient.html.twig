@@ -1,0 +1,62 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h4>Modifier le Patient</h4>
+    </div>
+    <div class="card-body">
+      {{ form_start(userForm, { 'attr': { 'class': 'form-horizontal' ,'novalidate': 'novalidate'} }) }}
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.name, 'Nom', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.name, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.name) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.email, 'Email', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.email, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.email) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Laisser vide si inchangé'}}) }}
+        {{ form_errors(userForm.plainPassword) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.age, 'Âge', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.age, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.age) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.phoneNumber, 'Téléphone', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.phoneNumber, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.phoneNumber) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.country, 'Pays', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.country, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.country) }}
+      </div>
+      
+      <div class="form-group mb-3">
+        {{ form_label(userForm.therapyType, 'Type de thérapie', {'label_attr': {'class': 'control-label'}}) }}
+        {{ form_widget(userForm.therapyType, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(userForm.therapyType) }}
+      </div>
+      
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+      </div>
+      
+      {{ form_end(userForm) }}
+    </div>
+  </div>
+</div>
+{% endblock %}

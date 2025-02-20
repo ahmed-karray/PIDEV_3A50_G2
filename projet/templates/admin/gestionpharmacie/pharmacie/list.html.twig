@@ -1,0 +1,65 @@
+{# templates/pharmacie/liste.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Liste des Pharmacies{% endblock %}
+{% block content %}
+    <h1>Liste des Pharmacies</h1>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Adresse</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Ville</th>
+                    <th>Type</th>
+                    <th>Logo</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pharmacie in pharmacies %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('listmedback', { pharmacieId: pharmacie.id }) }}">
+                                {{ pharmacie.nom }}
+                            </a>
+                        </td>
+                        <td>{{ pharmacie.adresse }}</td>
+                        <td>{{ pharmacie.email }}</td>
+                        <td>{{ pharmacie.tel }}</td>
+                        <td>{{ pharmacie.ville }}</td>
+                        <td>{{ pharmacie.type }}</td>
+                        <td>
+                            {% if pharmacie.logoBase64 %}
+                                <img src="data:image/png;base64,{{ pharmacie.logoBase64 }}" 
+                                     alt="{{ pharmacie.nom }} Logo" class="pharmacy-logo">
+                            {% else %}
+                                <div class="no-logo">No Logo</div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('editph', {id: pharmacie.id}) }}" class="btn btn-primary">Modifier</a>
+                            <form action="{{ path('supprimer_pharmacie', { id: pharmacie.id }) }}" 
+                                  method="POST" 
+                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette pharmacie ?');" 
+                                  style="display: inline-block;">
+                                <input type="hidden" name="_method" value="POST">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pharmacie.id) }}">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8">Aucune pharmacie trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{{ path('addph') }}" class="btn btn-primary mt-3">Ajouter une Pharmacie</a>
+{% endblock %}

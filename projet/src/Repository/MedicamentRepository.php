@@ -16,7 +16,7 @@ class MedicamentRepository extends ServiceEntityRepository
         parent::__construct($registry, Medicament::class);
     }
 
-//    /**
+    //    /**
 //     * @return Medicament[] Returns an array of Medicament objects
 //     */
 //    public function findByExampleField($value): array
@@ -31,7 +31,7 @@ class MedicamentRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Medicament
+    //    public function findOneBySomeField($value): ?Medicament
 //    {
 //        return $this->createQueryBuilder('m')
 //            ->andWhere('m.exampleField = :val')

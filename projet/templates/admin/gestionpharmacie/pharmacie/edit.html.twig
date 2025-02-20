@@ -1,0 +1,40 @@
+{# templates/pharmacie/edit.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+{% block content %}
+    <div class="pharmacie-container">
+        <h1>Modifier la Pharmacie : {{ pharmacie.nom }}</h1>
+
+        {{ form_start(form, { 'attr': {'novalidate': 'novalidate'} }) }}
+        <div class="form-group">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.nom) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.adresse) }}
+            {{ form_widget(form.adresse, {'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.adresse) }}
+        </div>
+
+        {{ form_row(form.email) }}
+        {{ form_row(form.tel) }}
+        {{ form_row(form.type) }}
+        {{ form_row(form.ville) }}
+        {{ form_row(form.logo) }}
+
+        {# Affichage du logo actuel si disponible #}
+        {% if logoBase64 %}
+            <div class="current-logo">
+                <p><strong>Logo actuel :</strong></p>
+                <img src="data:image/png;base64,{{ logoBase64 }}" alt="{{ pharmacie.nom }} Logo" class="logo-image">
+            </div>
+        {% else %}
+            <p>Aucun logo actuel.</p>
+        {% endif %}
+
+        {{ form_end(form) }}
+
+        <a href="{{ path('listph') }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+{% endblock %}
