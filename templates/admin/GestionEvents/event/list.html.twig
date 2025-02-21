@@ -1,0 +1,50 @@
+{% extends '/admin/dashboard.html.twig' %}
+{% block content %}
+<div class="container">
+    <h1 class="my-4">
+        <a href="{{ path('app_event_add') }}" class="btn btn-primary">ajouter evenement</a>
+    </h1>
+
+    <table class="table table-bordered table-striped">
+        <caption>List of events</caption>
+        <thead class="table-dark">
+            <tr>
+                <th>titre</th>
+                <th>description</th>
+                <th>lieu</th>
+                <th>date</th>
+                <th>heure</th>
+                <th>type</th>
+                <th>image</th>
+                <th>budget</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in list %}
+                <tr>
+                    <td>{{ a.titre }}</td> 
+                    <td>{{ a.description }}</td>
+                    <td>{{ a.lieu }}</td>
+                    <td>{{ a.date|date('Y-m-d H:i') }}</td>
+                    <td>{{ a.heure }}</td>
+                    <td>{{ a.type }}</td>
+                    <td> <img src="{{ asset('image/' ~ a.img) }}" width="100"></td>
+                    <td>{{ a.budget }}</td>
+                    <td>
+                        <a href="{{ path('edit', {'id': a.id}) }}" class="btn btn-warning btn-sm">Update</a>
+                         <form action="{{ path('delete', {'id': a.id}) }}" method="post" class="d-inline"> 
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ a.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this appointment?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No event found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
