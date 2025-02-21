@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<!-- Profile Start -->
+<div class="container-fluid py-5">
+  <div class="container">
+    <div class="row">
+      <!-- Profile Image & Basic Info -->
+      <div class="col-md-4">
+        <div class="card">
+          <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt="Profile Image">
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ app.user.name }}</h5>
+            <p class="card-text">Country : {{ app.user.country }}</p>
+            <p class="card-text">Type of Therapy : {{ app.user.therapyType }}</p>
+            <a href="#" class="btn btn-primary">Change Photo</a>
+          </div>
+        </div>
+      </div>
+      <!-- Profile Details -->
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="profileTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="timeline-tab" data-toggle="tab" href="#timeline" role="tab" aria-controls="timeline" aria-selected="false">Timeline</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content" id="profileTabContent">
+              <!-- About Tab -->
+              <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+                <div class="row mb-3">
+                  <div class="col-sm-4"><strong>User Id:</strong></div>
+                  <div class="col-sm-8">{{ app.user.id }}</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-4"><strong>Name:</strong></div>
+                  <div class="col-sm-8">{{ app.user.name }}</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-4"><strong>Email:</strong></div>
+                  <div class="col-sm-8">{{ app.user.email }}</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-4"><strong>Phone:</strong></div>
+                  <div class="col-sm-8">{{ app.user.phoneNumber }}</div>
+                </div>
+              </div>
+              <!-- Timeline Tab -->
+              <div class="tab-pane fade" id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
+                <div class="row mb-3">
+                  <div class="col-sm-4"><strong>Experience:</strong></div>
+                  <div class="col-sm-8">Expert</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-4"><strong>Hourly Rate:</strong></div>
+                  <div class="col-sm-8">10$/hr</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-4"><strong>Total Projects:</strong></div>
+                  <div class="col-sm-8">230</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-4"><strong>English Level:</strong></div>
+                  <div class="col-sm-8">Expert</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-4"><strong>Availability:</strong></div>
+                  <div class="col-sm-8">6 months</div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <strong>Your Bio:</strong>
+                    <p>Your detail description</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-end">
+            <a href="{{path('user_profile_edit')}}" class="btn btn-primary">Edit Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Profile End -->
+{% endblock %}

@@ -1,5 +1,4 @@
 <?php
-// src/Controller/DoctorRegistrationController.php
 
 namespace App\Controller\GestionUser;
 

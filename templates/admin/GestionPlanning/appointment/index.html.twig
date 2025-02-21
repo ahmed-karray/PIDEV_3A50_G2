@@ -1,0 +1,57 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Admin - Users & Appointments{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-inner">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="d-flex align-items-center">
+              <h4 class="card-title">Users & Appointments</h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="display table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Therapy Type</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user in users %}
+                    <tr>
+                      <td>{{ user.id }}</td>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.therapyType }}</td>
+                      <td>
+                        <a href="{{ path('admin_user_appointments', {'id': user.id}) }}" class="btn btn-primary btn-sm">
+                          <i class="fa fa-eye"></i> Show Appointments
+                        </a>
+                        <a href="{{ path('admin_appointment_choose', {'userId': user.id}) }}" class="btn btn-primary btn-sm">
+                          <i class="fa fa-plus"></i> Add Appointment
+                        </a>
+
+                      </td>
+                    </tr>
+                  {% else %}
+                    <tr>
+                      <td colspan="4">No users found.</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

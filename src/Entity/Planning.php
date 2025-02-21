@@ -3,7 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlanningRepository;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -12,142 +13,131 @@ class Planning
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private int $idDoctor;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "A planning must be assigned to a doctor.")]
+    private ?User $doctor = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank(message: "Le jour de la semaine est obligatoire.")]
-    private ?string $jour = null;
+    #[ORM\Column(type: 'date', nullable: false)] // Ensure database enforces non-null
+    #[Assert\NotNull(message: "Start date is required.")] // Prevent null submission
+    #[Assert\Type("\DateTimeInterface", message: "Invalid date format.")]
+    private ?\DateTimeInterface $startDate = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    #[Assert\NotNull(message: "L'heure de début est obligatoire.")]
-    private ?\DateTimeInterface $heureDebut = null;
+    #[ORM\Column(type: 'date', nullable: false)]
+    #[Assert\NotNull(message: "End date is required.")]
+    #[Assert\Type("\DateTimeInterface", message: "Invalid date format.")]
+    #[Assert\GreaterThanOrEqual(propertyPath: "startDate", message: "End date must be after or equal to start date.")]
+    private ?\DateTimeInterface $endDate = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    #[Assert\NotNull(message: "L'heure de fin est obligatoire.")]
-    private ?\DateTimeInterface $heureFin = null;
+    #[ORM\Column(type: 'time', nullable: true)]  // Champ nullable
+    #[Assert\NotNull(message: "Daily end time is required.")]
+    #[Assert\Type("\DateTimeInterface", message: "Invalid time format.")]
+    private ?\DateTimeInterface $dailyStartTime = null;  // Valeur par défaut null
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    #[Assert\NotNull(message: "Le nombre de places disponibles est obligatoire.")]
-    private int $placesDisponibles;
+    #[ORM\Column(type: 'time', nullable: false)]
+    #[Assert\NotNull(message: "Daily end time is required.")]
+    #[Assert\Type("\DateTimeInterface", message: "Invalid time format.")]
+    #[Assert\GreaterThan(propertyPath: "dailyStartTime", message: "Daily end time must be after start time.")]
+    private ?\DateTimeInterface $dailyEndTime = null;
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private int $rendezvousPris = 0;
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private int $placesRestantes;
-
-    #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Appointment::class)]
-    private iterable $rendezvous;
+    #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Appointment::class, cascade: ['persist', 'remove'])]
+    private Collection $appointments;
 
     public function __construct()
     {
-        $this->placesRestantes = $this->placesDisponibles;
+        $this->appointments = new ArrayCollection();
     }
+
+    // Getters and setters
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getIdDoctor(): int
+    public function getDoctor(): ?User
     {
-        return $this->idDoctor;
+        return $this->doctor;
     }
 
-    public function setIdDoctor(int $idDoctor): static
+    public function setDoctor(?User $doctor): self
     {
-        $this->idDoctor = $idDoctor;
+        $this->doctor = $doctor;
         return $this;
     }
 
-    public function getJour(): ?string
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->jour;
+        return $this->startDate;
     }
 
-    public function setJour(string $jour): static
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
-        $this->jour = $jour;
+        $this->startDate = $startDate;
         return $this;
     }
 
-    public function getHeureDebut(): ?\DateTimeInterface
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->heureDebut;
+        return $this->endDate;
     }
 
-    public function setHeureDebut(\DateTimeInterface $heureDebut): static
+    public function setEndDate(?\DateTimeInterface $endDate): self
     {
-        $this->heureDebut = $heureDebut;
+        $this->endDate = $endDate;
         return $this;
     }
 
-    public function getHeureFin(): ?\DateTimeInterface
+    public function getDailyStartTime(): ?\DateTimeInterface
     {
-        return $this->heureFin;
+        return $this->dailyStartTime;
     }
 
-    public function setHeureFin(\DateTimeInterface $heureFin): static
+    public function setDailyStartTime(?\DateTimeInterface $dailyStartTime): self
     {
-        $this->heureFin = $heureFin;
+        $this->dailyStartTime = $dailyStartTime;
         return $this;
     }
 
-    public function getPlacesDisponibles(): int
+    public function getDailyEndTime(): ?\DateTimeInterface
     {
-        return $this->placesDisponibles;
+        return $this->dailyEndTime;
     }
 
-    public function setPlacesDisponibles(int $placesDisponibles): static
+    public function setDailyEndTime(?\DateTimeInterface $dailyEndTime): self
     {
-        $this->placesDisponibles = $placesDisponibles;
-        $this->placesRestantes = $placesDisponibles - $this->rendezvousPris;
+        $this->dailyEndTime = $dailyEndTime;
         return $this;
     }
 
-    public function getRendezvousPris(): int
+    /**
+     * @return Collection|Appointment[]
+     */
+    public function getAppointments(): Collection
     {
-        return $this->rendezvousPris;
+        return $this->appointments;
     }
 
-    public function setRendezvousPris(int $rendezvousPris): static
+    public function addAppointment(Appointment $appointment): self
     {
-        $this->rendezvousPris = $rendezvousPris;
-        $this->placesRestantes = $this->placesDisponibles - $rendezvousPris;
-        return $this;
-    }
-
-    public function getPlacesRestantes(): int
-    {
-        return $this->placesRestantes;
-    }
-
-    public function verifierDisponibilite(): bool
-    {
-        return $this->placesRestantes > 0;
-    }
-
-    public function ajouterRendezvous(): bool
-    {
-        if ($this->verifierDisponibilite()) {
-            $this->rendezvousPris++;
-            $this->placesRestantes--;
-            return true;
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments[] = $appointment;
+            $appointment->setPlanning($this);
         }
-        return false;
+        return $this;
     }
 
-    public function getRendezvous(): iterable
+    public function removeAppointment(Appointment $appointment): self
     {
-        return $this->rendezvous;
-    }
-
-    public function __toString(): string
-    {
-        return $this->jour . ' ' . $this->heureDebut->format('H:i') . ' - ' . $this->heureFin->format('H:i');
+        if ($this->appointments->removeElement($appointment)) {
+            if ($appointment->getPlanning() === $this) {
+                $appointment->setPlanning(null);
+            }
+        }
+        return $this;
     }
 }

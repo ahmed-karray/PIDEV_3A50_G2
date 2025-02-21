@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -85,7 +87,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $passwordResetToken = null;
 
     #[ORM\Column(type: "datetime", nullable: true)]
+    #[Assert\NotBlank(message: "Please select an appointment date.")]
     private ?\DateTimeInterface $passwordResetRequestedAt = null;
+
+
+    #[ORM\OneToMany(mappedBy: "user", targetEntity: Appointment::class, cascade: ["remove"])]
+    private Collection $appointments;
 
     // Getters and Setters
 
@@ -269,6 +276,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDiploma(?string $diploma): self
     {
         $this->diploma = $diploma;
+        return $this;
+    }
+
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(Appointment $appointment): self
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments->add($appointment);
+            $appointment->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): self
+    {
+        if ($this->appointments->removeElement($appointment)) {
+            if ($appointment->getUser() === $this) {
+                $appointment->setUser(null);
+            }
+        }
         return $this;
     }
 }

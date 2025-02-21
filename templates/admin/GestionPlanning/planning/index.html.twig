@@ -1,0 +1,88 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Admin - Planning{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-inner">
+    <div class="row">
+      <div class="col-md-12">
+         <div class="card">
+            <div class="card-header">
+              <div class="d-flex align-items-center">
+                <h4 class="card-title">All Planning</h4>
+                <a href="{{ path('admin_planning_new') }}" class="btn btn-primary btn-round ms-auto">
+                  <i class="fa fa-plus"></i>
+                  Create New Planning
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table id="planning-table" class="display table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Availability</th>
+                      <th>Working Hours</th>
+                      <th>Doctor</th>
+                      <th style="width: 10%">Actions</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Availability</th>
+                      <th>Working Hours</th>
+                      <th>Doctor</th>
+                      <th>Actions</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    {% for planning in plannings %}
+                      <tr>
+                        <td>
+                          {% if planning.startDate %}
+                            {{ planning.startDate|date('Y-m-d') }}
+                          {% else %}
+                            Open
+                          {% endif %}
+                          &mdash;
+                          {% if planning.endDate %}
+                            {{ planning.endDate|date('Y-m-d') }}
+                          {% else %}
+                            Open
+                          {% endif %}
+                        </td>
+                        <td>{{ planning.dailyStartTime|date('H:i') }} - {{ planning.dailyEndTime|date('H:i') }}</td>
+                        <td>{{ planning.doctor.name }}</td>
+                        <td>
+                          <div class="form-button-action">
+                            <a href="{{ path('admin_planning_show', {'id': planning.id}) }}" class="btn btn-link btn-primary btn-lg" data-bs-toggle="tooltip" title="Show Planning">
+                              <i class="fa fa-eye"></i>
+                            </a>
+                            <a href="{{ path('admin_planning_edit', {'id': planning.id}) }}" class="btn btn-link btn-primary btn-lg" data-bs-toggle="tooltip" title="Edit Planning">
+                              <i class="fa fa-edit"></i>
+                            </a>
+                            <form method="post" action="{{ path('admin_planning_delete', {'id': planning.id}) }}" onsubmit="return confirm('Are you sure you want to delete this planning?');" style="display:inline;">
+                              <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ planning.id) }}">
+                              <button type="submit" class="btn btn-link btn-danger" data-bs-toggle="tooltip" title="Delete Planning">
+                                <i class="fa fa-times"></i>
+                              </button>
+                            </form>
+                          </div>
+                        </td>
+                      </tr>
+                    {% else %}
+                      <tr>
+                        <td colspan="5" class="text-center">No planning found.</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

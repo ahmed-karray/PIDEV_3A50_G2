@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>MEDINOVA - Hospital Website Template</title>
+    <title>BLOOM</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
 
     <!-- Favicon -->
-    <link href={{asset('assets/img/favicon.ico')}} rel="icon">
+    <link href={{asset('assets/img/favicon.jpg')}} rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -78,7 +78,7 @@
                 <a href="#" class="navbar-brand">
                     {% block title %}
                         <h1 class="m-0 text-uppercase text-primary">
-                            <i class="fa fa-clinic-medical me-2"></i>Medinova
+                            <i class="fa fa-clinic-medical me-2"></i>BLOOM
                         </h1>
                     {% endblock %}
                 </a>
@@ -133,7 +133,7 @@
                         <!-- Login & Register Buttons (Visible when user is not logged in) -->
                         <div class="d-flex align-items-center ms-3">
                             <a href="{{ path('login') }}" class="btn btn-login me-2">Login</a>
-                            <a href="{{ path('register') }}" class="btn btn-register">Register</a>
+                            <a href="{{ path('registration_choice') }}" class="btn btn-register">Register</a>
                         </div>
                         {% endif %}
                     </div>
@@ -306,9 +306,8 @@
                 <div class="col-lg-6 mb-5 mb-lg-0">
                     <div class="mb-4">
                         <h5 class="d-inline-block text-white text-uppercase border-bottom border-5">Appointment</h5>
-                        <h1 class="display-4">Make An Appointment For Your Family</h1>
+                        <h1  class="display-4">Make An Appointment</h1>
                     </div>
-                    <p class="text-white mb-5">Eirmod sed tempor lorem ut dolores. Aliquyam sit sadipscing kasd ipsum. Dolor ea et dolore et at sea ea at dolor, justo ipsum duo rebum sea invidunt voluptua. Eos vero eos vero ea et dolore eirmod et. Dolores diam duo invidunt lorem. Elitr ut dolores magna sit. Sea dolore sanctus sed et. Takimata takimata sanctus sed.</p>
                     <a class="btn btn-dark rounded-pill py-3 px-5 me-3" href="">Find Doctor</a>
                     <a class="btn btn-outline-dark rounded-pill py-3 px-5" href="">Read More</a>
                 </div>
@@ -317,22 +316,7 @@
                         <h1 class="mb-4">Book An Appointment</h1>
                         <form>
                             <div class="row g-3">
-                                <div class="col-12 col-sm-6">
-                                    <select class="form-select bg-light border-0" style="height: 55px;">
-                                        <option selected>Choose Department</option>
-                                        <option value="1">Department 1</option>
-                                        <option value="2">Department 2</option>
-                                        <option value="3">Department 3</option>
-                                    </select>
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <select class="form-select bg-light border-0" style="height: 55px;">
-                                        <option selected>Select Doctor</option>
-                                        <option value="1">Doctor 1</option>
-                                        <option value="2">Doctor 2</option>
-                                        <option value="3">Doctor 3</option>
-                                    </select>
-                                </div>
+                               
                                 <div class="col-12 col-sm-6">
                                     <input type="text" class="form-control bg-light border-0" placeholder="Your Name" style="height: 55px;">
                                 </div>
@@ -354,7 +338,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" type="submit">Make An Appointment</button>
+                                    <a href={{path('appointment_choose')}} class="btn btn-primary w-100 py-3" type="submit">Make An Appointment</a>
                                 </div>
                             </div>
                         </form>

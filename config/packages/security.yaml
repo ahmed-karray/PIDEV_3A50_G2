@@ -35,12 +35,14 @@ security:
         roles: PUBLIC_ACCESS,
         allow_if: "not is_granted('IS_AUTHENTICATED_FULLY')",
       }
-
     # Public pages for everyone
     - { path: ^/verify, roles: PUBLIC_ACCESS }
     - { path: ^/$, roles: PUBLIC_ACCESS }
     # Only admin users for admin routes
     - { path: ^/admin, roles: ROLE_ADMIN }
+    # Allow all authenticated users to access planning and appointment pages without email verification
+    - { path: ^/planning, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/appointment, roles: IS_AUTHENTICATED_FULLY }
     # Everything else requires full authentication and a verified email
     - {
         path: ^/,
