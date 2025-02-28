@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PharmacieRepository::class)]
 class Pharmacie
@@ -17,24 +18,71 @@ class Pharmacie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom de la pharmacie est obligatoire.')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Le nom doit contenir au moins {{ limit }} caractères.',
+        maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères.',
+    )]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'L\'adresse est obligatoire.')]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: 'L\'adresse doit contenir au moins {{ limit }} caractères.',
+        maxMessage: 'L\'adresse ne peut pas dépasser {{ limit }} caractères.',
+    )]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'L\'email est obligatoire.')]
+    #[Assert\Email(message: 'L\'email {{ value }} n\'est pas valide.')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'L\'email ne peut pas dépasser {{ limit }} caractères.'
+    )]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+        message: 'L\'email doit être au format valide (exemple : nom@domaine.com).'
+    )]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le numéro de téléphone est obligatoire.')]
+    #[Assert\Regex(
+        pattern: '/^[0-9]{8}$/',
+        message: 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
+    )]
     private ?string $tel = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le type de pharmacie est obligatoire.')]
+    #[Assert\Choice(
+        choices: ['pharmacie de nuit', 'pharmacie de jour'],
+        message: 'Le type de pharmacie doit être "pharmacie de nuit" ou "pharmacie de jour".'
+    )]
     private ?string $type = null;
 
     #[ORM\Column(type: Types::BLOB)]
-    private $logo = null;
+#[Assert\NotBlank(message: 'Le logo est obligatoire.')]
+#[Assert\File(
+    maxSize: '2M', // Limite la taille du fichier à 2 Mo
+    mimeTypes: ['image/jpeg', 'image/png', 'image/gif'], // Types MIME autorisés
+    mimeTypesMessage: 'Veuillez uploader une image valide (JPEG, PNG ou GIF).'
+)]
+private $logo;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'La ville est obligatoire.')]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: 'La ville doit contenir au moins {{ limit }} caractères.',
+        maxMessage: 'La ville ne peut pas dépasser {{ limit }} caractères.',
+    )]
     private ?string $ville = null;
 
     /**

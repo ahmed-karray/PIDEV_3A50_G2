@@ -116,45 +116,56 @@ public function supprimer(Pharmacie $pharmacie, EntityManagerInterface $entityMa
     return $this->redirectToRoute('listph');
 }
 
-    #[Route('/pharmacie/edit/{id}', name: 'editph')]
+#[Route('/pharmacie/edit/{id}', name: 'editph')]
 public function modifier(Request $request, EntityManagerInterface $entityManager, Pharmacie $pharmacie): Response
 {
-    // Convert the logo from a resource to a string
+    // Convertir le logo existant en base64 pour l'affichage dans le template
     $logoBase64 = null;
     if ($pharmacie->getLogo()) {
-        $logoBinary = stream_get_contents($pharmacie->getLogo()); // Convert resource to string
+        $logoBinary = stream_get_contents($pharmacie->getLogo()); // Convertir la ressource en chaîne binaire
         if ($logoBinary !== false) {
-            $logoBase64 = base64_encode($logoBinary); // Encode as base64
+            $logoBase64 = base64_encode($logoBinary); // Encoder en base64
         }
     }
 
+    // Créer le formulaire en pré-remplissant les données existantes
     $form = $this->createForm(PharmacieType::class, $pharmacie);
 
+    // Gérer la soumission du formulaire
     $form->handleRequest($request);
+
     if ($form->isSubmitted() && $form->isValid()) {
-        // Handle file upload
+        // Gérer l'upload du nouveau logo (si fourni)
         $logoFile = $form->get('logo')->getData();
 
         if ($logoFile) {
-            // Read file as binary
+            // Open file and read binary content
             $logoBinary = file_get_contents($logoFile->getPathname());
+
+            // Check if binary data was read
             if ($logoBinary === false) {
                 throw new \Exception('Error reading the uploaded file.');
             }
+            $entityManager->persist($pharmacie);
+            // Store binary data in the entity
             $pharmacie->setLogo($logoBinary);
         }
 
+        // Enregistrer les modifications en base de données
         $entityManager->flush();
 
+        // Ajouter un message flash de succès
         $this->addFlash('success', 'La pharmacie a été modifiée avec succès.');
 
+        // Rediriger vers la liste des pharmacies
         return $this->redirectToRoute('listph');
     }
 
+    // Afficher le formulaire dans le template
     return $this->render('admin/gestionpharmacie/pharmacie/edit.html.twig', [
         'form' => $form->createView(),
         'pharmacie' => $pharmacie,
-        'logoBase64' => $logoBase64, // Pass the base64-encoded logo to the template
+        'logoBase64' => $logoBase64, // Passer le logo encodé en base64 au template
     ]);
 }
 #[Route('/dashboard', name: 'dashboard')]
