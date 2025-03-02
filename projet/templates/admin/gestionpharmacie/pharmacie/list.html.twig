@@ -1,20 +1,28 @@
-{# templates/pharmacie/liste.html.twig #}
 {% extends 'admin/layout.html.twig' %}
 
 {% block title %}Liste des Pharmacies{% endblock %}
+
 {% block content %}
     <h1>Liste des Pharmacies</h1>
 
+    <!-- Formulaire de recherche -->
+    <form method="get" action="{{ path('listph') }}" class="mb-3 d-flex">
+        <input type="text" name="q" class="form-control me-2" 
+               placeholder="Rechercher une pharmacie..." 
+               value="{{ app.request.query.get('q') }}">
+    </form>
+
+    <!-- Tableau des pharmacies -->
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Nom</th>
-                    <th>Adresse</th>
+                    <th>{{ knp_pagination_sortable(pharmacies, 'Nom', 'p.nom') }}</th>
+                    <th>{{ knp_pagination_sortable(pharmacies, 'Adresse', 'p.adresse') }}</th>
                     <th>Email</th>
                     <th>Téléphone</th>
-                    <th>Ville</th>
-                    <th>Type</th>
+                    <th>{{ knp_pagination_sortable(pharmacies, 'Ville', 'p.ville') }}</th>
+                    <th>{{ knp_pagination_sortable(pharmacies, 'Type', 'p.type') }}</th>
                     <th>Logo</th>
                     <th>Actions</th>
                 </tr>
@@ -22,11 +30,7 @@
             <tbody>
                 {% for pharmacie in pharmacies %}
                     <tr>
-                        <td>
-                            <a href="{{ path('listmedback', { pharmacieId: pharmacie.id }) }}">
-                                {{ pharmacie.nom }}
-                            </a>
-                        </td>
+                        <td>{{ pharmacie.nom }}</td>
                         <td>{{ pharmacie.adresse }}</td>
                         <td>{{ pharmacie.email }}</td>
                         <td>{{ pharmacie.tel }}</td>
@@ -59,6 +63,11 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="navigation">
+        {{ knp_pagination_render(pharmacies) }}
     </div>
 
     <a href="{{ path('addph') }}" class="btn btn-primary mt-3">Ajouter une Pharmacie</a>

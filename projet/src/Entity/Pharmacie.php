@@ -184,7 +184,24 @@ private $logo;
 
         return $this;
     }
+// src/Entity/Pharmacie.php
 
+public function getLogoBase64(): ?string
+{
+    // If $this->logo is a file resource, read its contents into a string
+    if (is_resource($this->logo)) {
+        $logoData = stream_get_contents($this->logo);
+        return base64_encode($logoData);
+    }
+
+    // If $this->logo is already a string, encode it directly
+    if (is_string($this->logo)) {
+        return base64_encode($this->logo);
+    }
+
+    // If $this->logo is null or invalid, return null
+    return null;
+}
     /**
      * @return Collection<int, Medicament>
      */

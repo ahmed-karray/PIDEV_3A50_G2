@@ -29,8 +29,9 @@ class PharmacieType extends AbstractType
                 'label' => 'Logo',
                 'required' => false,
                 'mapped' => false,
-                'data_class' => null, // Désactive la validation du type de données
-            ])            ->add('ville')
+                
+            ])  
+            ->add('ville')
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer',
             ]);
