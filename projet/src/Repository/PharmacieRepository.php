@@ -41,24 +41,22 @@ class PharmacieRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-public function searchByName(string $name): array
+public function countByType(): array
 {
     return $this->createQueryBuilder('p')
-        ->where('p.nom LIKE :name')
-        ->setParameter('name', '%' . $name . '%')
+        ->select('p.type as name, COUNT(p.id) as count')
+        ->groupBy('p.type')
         ->getQuery()
         ->getResult();
 }
-public function findAllWithSorting(?string $sort = 'nom', ?string $order = 'asc')
+
+public function countByVille(): array
 {
-    $qb = $this->createQueryBuilder('p');
-
-    $allowedSortFields = ['nom', 'adresse', 'ville', 'type'];
-    if (in_array($sort, $allowedSortFields)) {
-        $qb->orderBy('p.' . $sort, $order === 'desc' ? 'DESC' : 'ASC');
-    }
-
-    return $qb->getQuery()->getResult();
+    return $this->createQueryBuilder('p')
+        ->select('p.ville as name, COUNT(p.id) as count')
+        ->groupBy('p.ville')
+        ->getQuery()
+        ->getResult();
 }
 
 

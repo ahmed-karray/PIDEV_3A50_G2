@@ -74,6 +74,7 @@ class Medicament
      */
     #[ORM\ManyToMany(targetEntity: Pharmacie::class, inversedBy: 'medicaments')]
     private Collection $id_pharmacie;
+    
 
     public function __construct()
     {
@@ -192,4 +193,7 @@ class Medicament
 
         return $this;
     }
+
+   
+   
 }

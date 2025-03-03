@@ -16,6 +16,9 @@ use App\Repository\PharmacieRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\BarChart;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
+use Knp\Snappy\Pdf;
 
 final class PharmacieController extends AbstractController{
     #[Route('/home', name: 'home')]
@@ -44,47 +47,55 @@ final class PharmacieController extends AbstractController{
     }
 
     #[Route('/pharmacie/list', name: 'listph')]
-    public function listbackph(
-        Request $request,
-        PharmacieRepository $pharmacieRepository,
-        PaginatorInterface $paginator
-    ): Response {
-        // Récupérer le terme de recherche
-        $searchTerm = $request->query->get('q');
-    
-        // Créer une requête de base
-        $queryBuilder = $pharmacieRepository->createQueryBuilder('p');
-    
-        // Appliquer la recherche si un terme est fourni
-        if ($searchTerm) {
-            $queryBuilder
-                ->where('p.nom LIKE :searchTerm ')
-                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+public function listbackph(
+    Request $request,
+    PharmacieRepository $pharmacieRepository,
+    PaginatorInterface $paginator
+): Response {
+    // Récupérer le terme de recherche
+    $searchTerm = $request->query->get('q');
+
+    // Créer une requête de base
+    $queryBuilder = $pharmacieRepository->createQueryBuilder('p');
+
+    // Appliquer la recherche si un terme est fourni
+    if ($searchTerm) {
+        $queryBuilder
+            ->where('p.nom LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+    }
+
+    // Paginer les résultats
+    $pharmacies = $paginator->paginate(
+        $queryBuilder->getQuery(), // Requête
+        $request->query->getInt('page', 1), // Numéro de page
+        10, // Limite par page
+        [
+            'defaultSortFieldName' => 'p.nom', // Colonne par défaut pour le tri
+            'defaultSortDirection' => 'asc', // Ordre par défaut
+        ]
+    );
+
+    // Encoder les logos en base64
+    foreach ($pharmacies as $pharmacie) {
+        if ($pharmacie->getLogo()) {
+            $logoData = stream_get_contents($pharmacie->getLogo());
+            $pharmacie->logoBase64 = base64_encode($logoData);
         }
-    
-        // Paginer les résultats
-        $pharmacies = $paginator->paginate(
-            $queryBuilder->getQuery(), // Requête
-            $request->query->getInt('page', 1), // Numéro de page
-            10, // Limite par page
-            [
-                'defaultSortFieldName' => 'p.nom', // Colonne par défaut pour le tri
-                'defaultSortDirection' => 'asc', // Ordre par défaut
-            ]
-        );
-    
-        // Encoder les logos en base64
-        foreach ($pharmacies as $pharmacie) {
-            if ($pharmacie->getLogo()) {
-                $logoData = stream_get_contents($pharmacie->getLogo());
-                $pharmacie->logoBase64 = base64_encode($logoData);
-            }
-        }
-    
-        return $this->render('admin/gestionpharmacie/pharmacie/list.html.twig', [
+    }
+
+    // Si c'est une requête AJAX, retourner uniquement le corps du tableau
+    if ($request->isXmlHttpRequest()) {
+        return $this->render('admin/gestionpharmacie/pharmacie/_table.html.twig', [
             'pharmacies' => $pharmacies,
         ]);
     }
+
+    // Pour les requêtes normales, retourner la page complète
+    return $this->render('admin/gestionpharmacie/pharmacie/list.html.twig', [
+        'pharmacies' => $pharmacies,
+    ]);
+}
 
     
     #[Route('/pharmacie/add', name: 'addph')]
@@ -213,5 +224,43 @@ public function modifier(Request $request, EntityManagerInterface $entityManager
     {
         $this->csrfTokenManager = $csrfTokenManager;
     }
+        
+    #[Route('/pharmacie/statistiques', name: 'pharmacie_statistiques')]
+    public function statistiques(PharmacieRepository $pharmacieRepository): Response
+    {
+        // Récupérer les statistiques
+        $statsType = $pharmacieRepository->countByType();
+        $statsVille = $pharmacieRepository->countByVille();
     
+        return $this->render('admin/gestionpharmacie/pharmacie/statistiques.html.twig', [
+            'statsType' => $statsType,
+            'statsVille' => $statsVille,
+        ]);
+    }
+    
+    #[Route('/pharmacie/pdf', name: 'pharmacie_pdf')]
+    public function generatePdf(PharmacieRepository $pharmacieRepository, Pdf $knpSnappyPdf): Response
+    {
+        // Récupérer toutes les pharmacies
+        $pharmacies = $pharmacieRepository->findAll();
+
+        // Rendre le template Twig en HTML
+        $html = $this->renderView('admin/gestionpharmacie/pharmacie/pdf_template.html.twig', [
+            'pharmacies' => $pharmacies,
+        ]);
+
+        // Générer le PDF
+        $pdfContent = $knpSnappyPdf->getOutputFromHtml($html);
+
+        // Retourner le PDF en réponse
+        return new Response(
+            $pdfContent,
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="liste_pharmacies.pdf"',
+            ]
+        );
+
+    }
 }
