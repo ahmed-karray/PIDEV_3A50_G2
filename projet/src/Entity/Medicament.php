@@ -74,11 +74,18 @@ class Medicament
      */
     #[ORM\ManyToMany(targetEntity: Pharmacie::class, inversedBy: 'medicaments')]
     private Collection $id_pharmacie;
+
+    /**
+     * @var Collection<int, Panier>
+     */
+    #[ORM\ManyToMany(targetEntity: Panier::class, mappedBy: 'medicaments')]
+    private Collection $paniers;
     
 
     public function __construct()
     {
         $this->id_pharmacie = new ArrayCollection();
+        $this->paniers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -190,6 +197,33 @@ class Medicament
     public function removeIdPharmacie(Pharmacie $idPharmacie): static
     {
         $this->id_pharmacie->removeElement($idPharmacie);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Panier>
+     */
+    public function getPaniers(): Collection
+    {
+        return $this->paniers;
+    }
+
+    public function addPanier(Panier $panier): static
+    {
+        if (!$this->paniers->contains($panier)) {
+            $this->paniers->add($panier);
+            $panier->addMedicament($this);
+        }
+
+        return $this;
+    }
+
+    public function removePanier(Panier $panier): static
+    {
+        if ($this->paniers->removeElement($panier)) {
+            $panier->removeMedicament($this);
+        }
 
         return $this;
     }

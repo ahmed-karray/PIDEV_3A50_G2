@@ -25,12 +25,7 @@ class PharmacieType extends AbstractType
                 ],
                 'placeholder' => 'Choisissez un type',
             ])
-            ->add('logo', FileType::class, [
-                'label' => 'Logo',
-                'required' => false,
-                'mapped' => false,
-                
-            ])  
+            ->add('logo')  
             ->add('ville')
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer',

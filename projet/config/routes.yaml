@@ -1,5 +1,13 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
+
+panier_voir:
+  path: /voir-panier
+  controller: App\Controller\PanierController::voirPanier
+
+panier_remove:
+  path: /remove-from-cart/{panierId}
+  controller: App\Controller\PanierController::removeFromCart

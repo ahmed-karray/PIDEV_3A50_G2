@@ -37,7 +37,11 @@
                 <tbody id="pharmacies-list">
                     {% for pharmacie in pharmacies %}
                         <tr>
-                            <td>{{ pharmacie.nom }}</td>
+                            <td>
+                                <a href="{{ path('listmedback', { pharmacieId: pharmacie.id }) }}">
+                                    {{ pharmacie.nom }}
+                                </a>
+                            </td>
                             <td>{{ pharmacie.adresse }}</td>
                             <td>{{ pharmacie.email }}</td>
                             <td>{{ pharmacie.tel }}</td>
@@ -72,6 +76,7 @@
             </table>
         </div>
     </div>
+    
     <!-- Pagination -->
     <div class="navigation">
         {{ knp_pagination_render(pharmacies) }}
